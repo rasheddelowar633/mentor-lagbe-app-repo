@@ -17,8 +17,9 @@ export default function Reveal({
     if (!el) return;
 
     if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
+      /* No observer support — reveal on the next tick instead of mid-render. */
+      const fallback = setTimeout(() => setVisible(true), 0);
+      return () => clearTimeout(fallback);
     }
 
     const observer = new IntersectionObserver(

@@ -7,7 +7,9 @@ export default function CurrentYear() {
   const [year, setYear] = useState("");
 
   useEffect(() => {
-    setYear(String(new Date().getFullYear()));
+    /* Defer past hydration so `new Date()` never runs while prerendering. */
+    const timer = setTimeout(() => setYear(String(new Date().getFullYear())), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   return <span suppressHydrationWarning>{year}</span>;

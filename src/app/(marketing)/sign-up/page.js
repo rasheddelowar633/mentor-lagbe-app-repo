@@ -31,12 +31,16 @@ export function SignUpContent() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const preset = searchParams.get("role");
-    if (preset === "tutor" || preset === "student") {
-      setForm((prev) => ({ ...prev, role: preset }));
-    }
-  }, [searchParams]);
+  /* Adjust from props during render: preset role from ?role= query string. */
+  const presetRole = searchParams.get("role");
+  const [appliedPreset, setAppliedPreset] = useState(presetRole);
+  if (
+    presetRole !== appliedPreset &&
+    (presetRole === "tutor" || presetRole === "student")
+  ) {
+    setAppliedPreset(presetRole);
+    setForm((prev) => ({ ...prev, role: presetRole }));
+  }
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {

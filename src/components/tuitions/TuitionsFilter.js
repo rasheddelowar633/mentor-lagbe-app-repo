@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FilterX, Search } from "lucide-react";
 import { CLASS_LEVELS, MODES, SUBJECTS } from "@/lib/constants";
 
@@ -16,9 +16,13 @@ export default function TuitionsFilter({ resultCount }) {
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
-  useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-  }, [searchParams]);
+  /* Follow URL changes (back/forward) — adjusted during render. */
+  const urlSearch = searchParams.get("search") || "";
+  const [appliedUrlSearch, setAppliedUrlSearch] = useState(urlSearch);
+  if (urlSearch !== appliedUrlSearch) {
+    setAppliedUrlSearch(urlSearch);
+    setSearch(urlSearch);
+  }
 
   const applyParams = (updates, { resetPage = true } = {}) => {
     const params = new URLSearchParams(searchParams.toString());

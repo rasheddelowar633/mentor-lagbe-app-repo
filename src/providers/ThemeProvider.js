@@ -25,9 +25,13 @@ export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(LIGHT);
 
   useEffect(() => {
-    const stored = readStoredTheme();
-    setThemeState(stored);
-    document.documentElement.setAttribute("data-theme", stored);
+    /* Read storage after hydration — never during prerender. */
+    const timer = setTimeout(() => {
+      const stored = readStoredTheme();
+      setThemeState(stored);
+      document.documentElement.setAttribute("data-theme", stored);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const applyTheme = useCallback((next) => {

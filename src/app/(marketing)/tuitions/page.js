@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { BookOpen, GraduationCap, SearchX } from "lucide-react";
 import TuitionCard from "@/components/TuitionCard";
 import TuitionsFilter from "@/components/tuitions/TuitionsFilter";
@@ -124,9 +125,9 @@ export default async function BrowseTuitionsPage({ searchParams }) {
             }
             action={
               hasFilters ? (
-                <a href="/tuitions" className="btn-ghost-brand">
+                <Link href="/tuitions" className="btn-ghost-brand">
                   Clear all filters
-                </a>
+                </Link>
               ) : (
                 <a href="/sign-up?role=tutor" className="btn-brand">
                   Post a tuition
