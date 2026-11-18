@@ -334,7 +334,9 @@ export default function DashboardLayout({ children }) {
           </div>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main id="main-content" className="flex-1 p-4 sm:p-6 lg:p-8" tabIndex={-1}>
+          {children}
+        </main>
       </div>
     </div>
   );

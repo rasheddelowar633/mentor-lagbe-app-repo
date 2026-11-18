@@ -51,6 +51,12 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-full flex-col bg-base-100 text-base-content antialiased">
+        <a
+          href="#main-content"
+          className="sr-only z-[100] rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-content focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <AuthProvider>
             {children}
