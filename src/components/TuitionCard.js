@@ -8,6 +8,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { resolveImageUrl } from "@/lib/api";
+import BookmarkButton from "@/components/tuitions/BookmarkButton";
 
 function subjectInitial(subject) {
   return (subject || "T").charAt(0).toUpperCase();
@@ -71,6 +72,11 @@ export default function TuitionCard({ tuition }) {
             {classLevel}
           </span>
         </div>
+
+        <BookmarkButton
+          tuitionId={tuition?._id || tuition?.id}
+          className="absolute right-3 top-3"
+        />
       </div>
 
       {/* Body */}
