@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { LayoutDashboard, LogOut, Menu, UserRound, X } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -31,6 +31,23 @@ export default function Navbar() {
   const router = useRouter();
   const { user, role, loading, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  /* Close the drawer on Escape (keyboard accessibility). */
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
+  /* Close the drawer when the route changes — adjusted during render. */
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setMobileOpen(false);
+  }
 
   const handleSignOut = async () => {
     await signOut();
