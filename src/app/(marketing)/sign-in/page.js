@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
@@ -38,30 +39,46 @@ export function SignInContent() {
 
   const validate = () => {
     const next = {};
-    if (!form.email.trim()) next.email = "Please enter your email address.";
-    else if (!EMAIL_RE.test(form.email.trim()))
+
+    if (!form.email.trim()) {
+      next.email = "Please enter your email address.";
+    } else if (!EMAIL_RE.test(form.email.trim())) {
       next.email = "Please enter a valid email address.";
-    if (!form.password) next.password = "Please enter your password.";
-    else if (form.password.length < 8)
+    }
+
+    if (!form.password) {
+      next.password = "Please enter your password.";
+    } else if (form.password.length < 8) {
       next.password = "Password must be at least 8 characters.";
+    }
+
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (!validate()) return;
 
     setSubmitting(true);
+
     try {
       const result = await signIn({
         email: form.email.trim(),
         password: form.password,
       });
+
       toast.success("Signed in successfully — welcome back!");
-      router.push(dashboardPath(result?.role || result?.profile?.role || "student"));
+
+      const userRole =
+        result?.role || result?.profile?.role || "student";
+
+      router.push(dashboardPath(userRole));
     } catch (error) {
+      console.error("Sign in error:", error);
       toast.error(error.message || "Invalid email or password.");
+    } finally {
       setSubmitting(false);
     }
   };
@@ -76,7 +93,10 @@ export function SignInContent() {
   return (
     <div className="container-x py-12 md:py-16">
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2">
-        <AuthAside title="Welcome back to MentorLagbe." points={AUTH_POINTS.signIn} />
+        <AuthAside
+          title="Welcome back to MentorLagbe."
+          points={AUTH_POINTS.signIn}
+        />
 
         <div className="rounded-3xl border border-base-content/10 bg-base-100 p-7 shadow-xl shadow-primary/5 sm:p-9">
           <div className="lg:hidden">
@@ -86,20 +106,27 @@ export function SignInContent() {
           <h1 className="mt-5 text-2xl font-extrabold tracking-tight lg:mt-0">
             Sign in to your account
           </h1>
+
           <p className="mt-1.5 text-sm text-base-content/60">
             Use the email and password you registered with.
           </p>
 
-          <form onSubmit={handleSubmit} noValidate className="mt-7 flex flex-col gap-5">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="mt-7 flex flex-col gap-5"
+          >
             <div>
               <label htmlFor="signin-email" className="field-label">
                 Email address *
               </label>
+
               <div className="relative">
                 <Mail
                   className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/45"
                   aria-hidden="true"
                 />
+
                 <input
                   id="signin-email"
                   type="email"
@@ -110,6 +137,7 @@ export function SignInContent() {
                   className="field-input !pl-10"
                 />
               </div>
+
               {fieldError("email")}
             </div>
 
@@ -117,11 +145,13 @@ export function SignInContent() {
               <label htmlFor="signin-password" className="field-label">
                 Password *
               </label>
+
               <div className="relative">
                 <Lock
                   className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/45"
                   aria-hidden="true"
                 />
+
                 <input
                   id="signin-password"
                   type="password"
@@ -132,13 +162,19 @@ export function SignInContent() {
                   className="field-input !pl-10"
                 />
               </div>
+
               {fieldError("password")}
             </div>
 
-            <button type="submit" disabled={submitting} className="btn-brand w-full">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn-brand w-full"
+            >
               {submitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Signing in…
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Signing in…
                 </>
               ) : (
                 <>
@@ -150,7 +186,10 @@ export function SignInContent() {
 
           <p className="mt-5 text-center text-sm font-medium text-base-content/60">
             New to MentorLagbe?{" "}
-            <Link href="/sign-up" className="font-extrabold text-primary hover:underline">
+            <Link
+              href="/sign-up"
+              className="font-extrabold text-primary hover:underline"
+            >
               Create an account
             </Link>
           </p>
