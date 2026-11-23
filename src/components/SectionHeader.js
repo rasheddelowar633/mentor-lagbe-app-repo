@@ -1,9 +1,6 @@
 import Reveal from "@/components/Reveal";
 
-/**
- * One consistent heading style is used for every section of the site
- * (README UI requirement).
- */
+
 export default function SectionHeader({
   eyebrow,
   title,

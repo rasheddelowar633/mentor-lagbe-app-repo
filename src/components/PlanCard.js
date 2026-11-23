@@ -2,10 +2,7 @@ import Link from "next/link";
 import { Check, Crown } from "lucide-react";
 import SubscribeButton from "@/components/SubscribeButton";
 
-/**
- * Pricing card used on /pricing and inside the home page pricing section.
- * Free plan → sign up CTA, Pro plan → Stripe checkout CTA.
- */
+
 export default function PlanCard({
   name,
   price,

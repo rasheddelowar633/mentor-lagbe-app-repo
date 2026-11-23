@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import {
   Banknote,
@@ -6,7 +7,10 @@ import {
   Monitor,
   Home,
   UserRound,
+  ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
+
 import { resolveImageUrl } from "@/lib/api";
 import BookmarkButton from "@/components/tuitions/BookmarkButton";
 
@@ -15,7 +19,8 @@ function subjectInitial(subject) {
 }
 
 /**
- * Tuition listing card — every card has the same height and width inside a grid.
+ * Premium tuition listing card.
+ * Consistent dimensions and centered grid alignment.
  */
 export default function TuitionCard({ tuition }) {
   if (!tuition) return null;
@@ -36,95 +41,171 @@ export default function TuitionCard({ tuition }) {
   const image = resolveImageUrl(bannerImage);
 
   return (
-    <article className="card-brand group">
+    <article
+      className="
+        group relative mx-auto flex h-full w-full
+        max-w-[390px] flex-col overflow-hidden
+        rounded-3xl border border-base-content/10
+        bg-base-100 shadow-sm
+        transition-all duration-500
+        hover:-translate-y-2
+        hover:border-primary/30
+        hover:shadow-xl hover:shadow-primary/10
+      "
+    >
       {/* Banner */}
-      <div className="relative h-40 shrink-0 overflow-hidden bg-base-300">
+      <div className="relative h-48 shrink-0 overflow-hidden bg-base-200">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={image}
             alt={title || subject || "Tuition banner"}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="
+              h-full w-full object-cover
+              transition-transform duration-700
+              group-hover:scale-110
+            "
           />
         ) : (
-          <div className="grid h-full w-full place-items-center bg-gradient-to-br from-primary/85 via-primary/60 to-secondary/70">
-            <span className="text-5xl font-extrabold text-white/90">
+          <div
+            className="
+              grid h-full w-full place-items-center
+              bg-gradient-to-br from-primary via-primary/80 to-secondary
+            "
+          >
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/30 bg-white/15 text-5xl font-black text-white shadow-xl backdrop-blur-sm">
               {subjectInitial(subject)}
-            </span>
+            </div>
           </div>
         )}
 
-        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+        {/* Image overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+
+        {/* Top badges */}
+        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
           <span
-            className={`badge badge-sm font-bold ${
-              mode === "Online" ? "badge-info" : "badge-secondary"
-            }`}
+            className={`
+              inline-flex items-center gap-1.5 rounded-full
+              px-3 py-1.5 text-[11px] font-bold
+              shadow-lg backdrop-blur-md
+              ${
+                mode === "Online"
+                  ? "bg-blue-500/90 text-white"
+                  : "bg-emerald-500/90 text-white"
+              }
+            `}
           >
             {mode === "Online" ? (
-              <Monitor className="mr-1 h-3 w-3" />
+              <Monitor className="h-3.5 w-3.5" />
             ) : (
-              <Home className="mr-1 h-3 w-3" />
+              <Home className="h-3.5 w-3.5" />
             )}
-            {mode}
+            {mode || "Flexible"}
           </span>
-          <span className="badge badge-sm font-bold badge-neutral">
-            {classLevel}
+
+          <span className="rounded-full border border-white/30 bg-black/40 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur-md">
+            {classLevel || "All Levels"}
           </span>
         </div>
 
+        {/* Bookmark */}
         <BookmarkButton
           tuitionId={tuition?._id || tuition?.id}
-          className="absolute right-3 top-3"
+          className="absolute right-4 top-4 rounded-full bg-white/90 shadow-lg backdrop-blur-md transition-transform hover:scale-110"
         />
-      </div>
 
-      {/* Body */}
-      <div className="flex flex-1 flex-col p-5">
-        <span className="text-xs font-extrabold uppercase tracking-widest text-primary">
-          {subject}
-        </span>
-
-        <h3 className="mt-2 line-clamp-2 text-base font-extrabold leading-snug text-base-content transition-colors group-hover:text-primary">
-          {title}
-        </h3>
-
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs font-semibold text-base-content/60">
-          <span className="inline-flex items-center gap-1.5">
-            <CalendarDays className="h-3.5 w-3.5 text-primary" />
-            {daysPerWeek} days/week
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-primary" />
-            <span className="max-w-[9rem] truncate">
-              {location || (mode === "Online" ? "Online" : "On-site")}
-            </span>
+        {/* Subject label */}
+        <div className="absolute bottom-4 left-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md">
+            <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+            {subject || "General"}
           </span>
         </div>
+      </div>
 
-        <div className="mt-4 flex items-center gap-2 border-t border-dashed border-base-content/15 pt-4 text-xs font-semibold text-base-content/70">
-          <span className="grid h-7 w-7 place-items-center rounded-full bg-secondary/15 text-secondary">
-            <UserRound className="h-3.5 w-3.5" />
+      {/* Card Body */}
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        {/* Title */}
+        <h3
+          className="
+            line-clamp-2 min-h-[3.5rem]
+            text-lg font-extrabold leading-7
+            tracking-tight text-base-content
+            transition-colors duration-300
+            group-hover:text-primary
+          "
+        >
+          {title || "Untitled Tuition Batch"}
+        </h3>
+
+        {/* Details */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="flex min-w-0 items-center gap-2 rounded-xl bg-base-200/70 p-3">
+            <CalendarDays className="h-4 w-4 shrink-0 text-primary" />
+            <span className="truncate text-xs font-semibold text-base-content/70">
+              {daysPerWeek || 0} days/week
+            </span>
+          </div>
+
+          <div className="flex min-w-0 items-center gap-2 rounded-xl bg-base-200/70 p-3">
+            <MapPin className="h-4 w-4 shrink-0 text-primary" />
+            <span className="truncate text-xs font-semibold text-base-content/70">
+              {location || (mode === "Online" ? "Online" : "On-site")}
+            </span>
+          </div>
+        </div>
+
+        {/* Tutor Information */}
+        <div className="mt-5 flex items-center gap-3 border-t border-base-content/10 pt-4">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+            <UserRound className="h-5 w-5" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-base-content/45">
+              Your Mentor
+            </span>
+            <span className="block truncate text-sm font-bold text-base-content">
+              {tutorName || "Verified Tutor"}
+            </span>
+          </div>
+
+          <span className="rounded-full bg-success/10 px-2.5 py-1 text-[10px] font-bold text-success">
+            Verified
           </span>
-          <span className="truncate">{tutorName || "Verified Tutor"}</span>
         </div>
 
         {/* Footer */}
-        <div className="mt-auto flex items-end justify-between gap-3 pt-4">
-          <div>
-            <span className="block text-[11px] font-bold uppercase tracking-wide text-base-content/45">
-              Monthly fee
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-base-content/10 pt-5">
+          <div className="min-w-0">
+            <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-base-content/45">
+              Monthly Fee
             </span>
-            <span className="flex items-baseline gap-1 text-xl font-extrabold text-base-content">
-              <Banknote className="h-4 w-4 text-secondary" />
-              ৳{Number(monthlyFee || 0).toLocaleString("en-US")}
-            </span>
+
+            <div className="flex items-center gap-1.5">
+              <Banknote className="h-5 w-5 text-secondary" />
+              <span className="text-xl font-black tracking-tight text-base-content">
+                ৳{Number(monthlyFee || 0).toLocaleString("en-US")}
+              </span>
+            </div>
           </div>
+
           <Link
             href={`/tuitions/${_id}`}
-            className="btn-brand !px-4 !py-2 text-xs"
+            className="
+              btn-brand group/btn
+              inline-flex shrink-0 items-center gap-2
+              !rounded-xl !px-4 !py-3
+              text-xs font-bold
+              shadow-md shadow-primary/15
+              transition-all duration-300
+              hover:shadow-lg hover:shadow-primary/25
+            "
           >
             View Details
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
           </Link>
         </div>
       </div>
